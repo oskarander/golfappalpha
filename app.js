@@ -63,12 +63,21 @@ const fetchData = async () => {
     golferListItems.forEach(listItem => {
       listItem.addEventListener("click", removeGolfer);
     });
-  };
+  
+    // Attach event listeners to participant divs
+  const participantDivs = app.querySelectorAll(".participant");
+  participantDivs.forEach((participantDiv, index) => {
+    participantDiv.addEventListener("click", () => {
+      activeParticipantIndex = index;
+      renderApp();
+    });
+  });
+};
   
   
   
   // Select a golfer for the active participant
-const selectGolfer = (e) => {
+  const selectGolfer = (e) => {
     const golferId = e.target.dataset.id;
     const activeParticipant = participants[activeParticipantIndex];
   
@@ -79,10 +88,10 @@ const selectGolfer = (e) => {
     if (activeParticipant.selectedGolfers.length < 2) {
       activeParticipant.selectedGolfers.push(golferId);
       database.ref(`participants/${activeParticipantIndex}`).set(activeParticipant);
-      activeParticipantIndex = (activeParticipantIndex + 1) % participants.length;
       renderApp();
     }
   };
+  
   // Remove a golfer from the active participant
 const removeGolfer = (e) => {
     const participantIndex = parseInt(e.target.dataset.participantIndex, 10);
