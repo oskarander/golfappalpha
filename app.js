@@ -18,15 +18,20 @@ const firebaseConfig = {
   let participants = [];
   let golfers = [];
   
-  // Fetch participants and golfers from the Firebase database
-const fetchData = async () => {
-    const participantsSnapshot = await database.ref("participants").once("value");
-    participants = Object.values(participantsSnapshot.val()) || [];
-    const golfersSnapshot = await database.ref("golfers").once("value");
-    golfers = Object.values(golfersSnapshot.val()) || [];
+  const fetchData = () => {
+    // Listen for changes in the 'participants' node
+    database.ref("participants").on('value', (snapshot) => {
+      participants = Object.values(snapshot.val()) || [];
+      renderApp();
+    });
   
-    renderApp();
+    // Listen for changes in the 'golfers' node
+    database.ref("golfers").on('value', (snapshot) => {
+      golfers = Object.values(snapshot.val()) || [];
+      renderApp();
+    });
   };
+
   
   
   const renderApp = () => {
